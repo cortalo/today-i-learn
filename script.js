@@ -39,11 +39,33 @@ const factsList = document.querySelector(".facts-list");
 
 // Create DOM elements: Render facts in list
 factsList.innerHTML = "";
-const htmlArray = initialFacts.map(
-  (fact) => `<li class="fact">${fact.text}</li>`
-);
-const html = htmlArray.join("");
-factsList.insertAdjacentHTML("afterbegin", html);
+
+// Load data from supabase
+loadFacts();
+
+async function loadFacts() {
+  const res = await fetch(
+    "https://zzbwfbvsjvlpgzounbit.supabase.co/rest/v1/facts",
+    {
+      headers: {
+        apikey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6YndmYnZzanZscGd6b3VuYml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2OTA1NjEsImV4cCI6MjA3NzI2NjU2MX0.Sd57AL1rZetiKz2PGC11xxXI5wxt5rCNXPsnvE4FuJw",
+        authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6YndmYnZzanZscGd6b3VuYml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2OTA1NjEsImV4cCI6MjA3NzI2NjU2MX0.Sd57AL1rZetiKz2PGC11xxXI5wxt5rCNXPsnvE4FuJw",
+      },
+    }
+  );
+  const data = await res.json();
+  createFactsList(data);
+}
+
+function createFactsList(dataArray) {
+  const htmlArray = dataArray.map(
+    (fact) => `<li class="fact">${fact.text}</li>`
+  );
+  const html = htmlArray.join("");
+  factsList.insertAdjacentHTML("afterbegin", html);
+}
 
 // Toggle form visibility
 btn.addEventListener("click", function () {
